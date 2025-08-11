@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun, Kekasihku!</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Pengaturan Dasar & Latar Belakang */
+        html {
+            scroll-behavior: smooth;
+            /* DIPERBARUI: Scroll snap diterapkan ke seluruh halaman */
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        #background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .falling-element {
+            position: absolute;
+            color: #fff;
+            user-select: none;
+            font-size: 2rem;
+            animation: fall linear;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        #music-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 1s ease;
+            color: white;
+            text-align: center;
+        }
+
+        .play-button {
+            padding: 20px 40px;
+            background: #fff;
+            color: #e91e63;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+            transition: transform 0.3s ease;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Menghapus .card-container */
+
+        .card, #gallery-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            /* DIPERBARUI: Semua bagian utama menjadi snap point */
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-content {
+            background: rgba(255, 255, 255, 0.95);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            position: relative;
+        }
+        
+        .card.visible .card-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .main-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        h1 { font-family: 'Pacifico', cursive; font-size: 3rem; color: #e91e63; margin: 10px 0; }
+        h2 { font-size: 1.5rem; font-weight: 400; color: #555; margin-top: 0; }
+        h3 { font-size: 1.8rem; color: #e91e63; margin-bottom: 15px; font-family: 'Pacifico', cursive; }
+        .date { font-style: italic; color: #777; }
+        p { font-size: 1.1rem; line-height: 1.7; }
+
+        /* --- STYLING GALERI GANTUNG --- */
+        #gallery-section {
+            padding: 100px 20px;
+            width: 100%;
+        }
+        .gallery-title {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .hanging-photos-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px 20px;
+            padding-top: 50px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .photo-holder {
+            position: relative;
+            padding-top: 50px; /* Ruang untuk tali */
+            animation: swing 4s ease-in-out infinite;
+        }
+        .photo-holder:nth-child(even) {
+            animation-delay: -2s;
+            margin-top: 30px;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(2deg); }
+            50% { transform: rotate(-2deg); }
+        }
+        .photo-holder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .polaroid {
+            background: #fff;
+            padding: 15px 15px 60px 15px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+        }
+        .polaroid img {
+            width: 200px;
+            height: 250px; /* Ukuran portrait */
+            object-fit: cover;
+            display: block;
+        }
+        /* --- END STYLING GALERI GANTUNG --- */
+
+        .modal { display: none; position: fixed; z-index: 1001; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); }
+        .modal-content { margin: auto; display: block; max-width: 80%; max-height: 80%; animation: zoomIn 0.6s; }
+        @keyframes zoomIn { from {transform: scale(0)} to {transform: scale(1)} }
+        .close-modal { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
+        .close-modal:hover, .close-modal:focus { color: #bbb; text-decoration: none; }
+        .prev, .next { cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -50px; color: white; font-weight: bold; font-size: 30px; transition: 0.6s ease; border-radius: 0 3px 3px 0; user-select: none; }
+        .next { right: 0; border-radius: 3px 0 0 3px; }
+        .prev { left: 0; }
+        .prev:hover, .next:hover { background-color: rgba(255,255,255,0.2); }
+
+        .from { font-family: 'Pacifico', cursive; font-size: 1.8rem; color: #e91e63; margin-top: 5px; }
+
+        .scroll-down { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); animation: bounce 2s infinite; }
+        .scroll-down a { font-size: 2rem; color: #fff; text-decoration: none; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-20px); } 60% { transform: translateX(-50%) translateY(-10px); } }
+
+        .lotso-doll { position: absolute; width: 130px; height: auto; z-index: 10; opacity: 0; transition: opacity 0.5s ease-in-out 1s; }
+        .card.visible .lotso-doll, .gallery-section-visible .lotso-doll { opacity: 1; }
+        #doll-1 { bottom: -20px; right: -30px; transform-origin: bottom center; }
+        .card.visible #doll-1 { animation: wave-hand 2.5s ease-in-out infinite 1.5s; }
+        @keyframes wave-hand { 0%, 50%, 100% { transform: rotate(0deg); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } }
+        #doll-2 { top: -30px; left: -30px; transform-origin: center; }
+        .card.visible #doll-2 { animation: shy-sway 3s ease-in-out infinite 1.5s; }
+        @keyframes shy-sway { 0%, 100% { transform: rotate(-5deg) translateX(-5px); } 50% { transform: rotate(5deg) translateX(5px); } }
+        #doll-3 { bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 12; }
+        .gallery-section-visible #doll-3 { animation: happy-jump 1.5s ease-in-out infinite 1.5s; }
+        #doll-4 { bottom: 40px; right: 40px; }
+        .card.visible #doll-4 { animation: happy-jump 1.5s ease-in-out infinite 1.5s; }
+        @keyframes happy-jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        #doll-5 { bottom: 60px; left: 50%; transform: translateX(-50%); width: 100px; }
+        #doll-5 .heart { position: absolute; font-size: 2rem; color: #ff4d4d; opacity: 0; }
+        .card.visible #doll-5 .heart { animation: show-heart 3s ease-in-out infinite 1.5s; }
+        @keyframes show-heart { 0%, 100% { transform: translateY(0) scale(0); opacity: 0; } 25% { transform: translateY(-30px) scale(1.2); opacity: 1; } 50% { transform: translateY(-60px) scale(1); opacity: 0; } }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .card-content { padding: 25px; }
+            .polaroid img { width: 120px; height: 150px; }
+            .polaroid { padding: 10px 10px 40px 10px; }
+            .lotso-doll { width: 90px; }
+            #doll-1 { right: -15px; }
+            #doll-2 { left: -15px; top: -20px; }
+            #doll-3 { width: 100px; }
+            #doll-4 { right: 15px; bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="background-animation"></div>
+
+    <div id="music-overlay">
+        <div class="play-button">Sentuh untuk memulai 🎵</div>
+    </div>
+    
+    <audio id="background-music" loop>
+        <source src="audio/music1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="gallery-modal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modal-image">
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
+    </div>
+
+    <!-- Card 1: Pembuka -->
+    <div id="pembuka" class="card">
+        <div class="card-content">
+            <div id="doll-1" class="lotso-doll">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g><defs><radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:rgb(255,229,236);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(249,212,222);stop-opacity:1" /></radialGradient></defs><path d="M100,185 C40,185 20,120 45,70 C70,20 130,20 155,70 C180,120 160,185 100,185 Z" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M70,175 C60,140 70,120 100,120 C130,120 140,140 130,175 Z" fill="url(#grad1)" stroke="#d4acb7" stroke-width="2"/><path d="M100,85 C70,85 60,125 100,125 C140,125 130,85 100,85" fill="#FADADD" stroke="#d4acb7" stroke-width="2"/><ellipse cx="100" cy="100" rx="25" ry="18" fill="#8A4E8C" stroke="#502d51" stroke-width="1"/><circle cx="84" cy="88" r="7" fill="#2c2c2c"/><circle cx="116" cy="88" r="7" fill="#2c2c2c"/><path d="M70,75 Q85,65 100,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M100,75 Q115,65 130,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M45,70 C20,80 15,40 40,30 C65,20 60,60 45,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M155,70 C180,80 185,40 160,30 C135,20 140,60 155,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/></g></svg>
+            </div>
+            <header>
+                <img src="images/IMG-20250811-WA0032.jpg" alt="Foto Pacar" class="main-photo" onerror="this.onerror=null;this.src='https://placehold.co/150x150/ff9a9e/ffffff?text=Error';">
+                <h1>Selamat Ulang Tahun, Sayang!</h1>
+                <h2>Abuy</h2>
+                <p class="date">12 Agustus 2025</p>
+            </header>
+        </div>
+        <div class="scroll-down">
+            <a href="#pesan">↓</a>
+        </div>
+    </div>
+
+    <!-- Card 2: Pesan Spesial -->
+    <div id="pesan" class="card">
+        <div class="card-content">
+            <div id="doll-2" class="lotso-doll">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g><defs><radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:rgb(255,229,236);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(249,212,222);stop-opacity:1" /></radialGradient></defs><path d="M100,185 C40,185 20,120 45,70 C70,20 130,20 155,70 C180,120 160,185 100,185 Z" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M70,175 C60,140 70,120 100,120 C130,120 140,140 130,175 Z" fill="url(#grad1)" stroke="#d4acb7" stroke-width="2"/><path d="M100,85 C70,85 60,125 100,125 C140,125 130,85 100,85" fill="#FADADD" stroke="#d4acb7" stroke-width="2"/><ellipse cx="100" cy="100" rx="25" ry="18" fill="#8A4E8C" stroke="#502d51" stroke-width="1"/><circle cx="84" cy="88" r="7" fill="#2c2c2c"/><circle cx="116" cy="88" r="7" fill="#2c2c2c"/><path d="M70,75 Q85,65 100,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M100,75 Q115,65 130,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M45,70 C20,80 15,40 40,30 C65,20 60,60 45,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M155,70 C180,80 185,40 160,30 C135,20 140,60 155,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/></g></svg>
+            </div>
+            <h3>💌 Pesan Spesial Untukmu</h3>
+            <p>
+                Hari ini bukan cuma hari spesial buat kamu, tapi juga buat aku… karena aku bisa merayakan hari lahirnya orang paling berharga dalam hidupku. Makasiii sudah jadi sosok yang penuh kasih, sabar, dan selalu bikin aku merasa dicintai setiap hari.
+
+                21 tahun ini kamu udah tumbuh jadi pribadi yang luar biasa, dan aku bangga banget sama semua hal yang udah kamu capai. Aku berdoa semoga langkah-langkahmu selalu dimudahkan, rezeki kamuu dilancarkan, dan semua mimpimu satu per satu terwujud.
+
+                Aku bersyukur punya kamu, Abuy. Hari ini dan seterusnya, aku mau jadi orang yang selalu ada di sampingmu — di setiap tawa, sedih, dan semua cerita kita.
+                Happy birthday, my love! ❤️✨"
+            </p>
+        </div>
+    </div>
+    
+    <!-- Bagian Galeri Gantung -->
+    <div id="gallery-section">
+        <h3 class="gallery-title">📸 Galeri Kenangan Kita</h3>
+        <div class="hanging-photos-container">
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0028.jpg" alt="Kenangan 1" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0029.jpg" alt="Kenangan 2" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0024.jpg" alt="Kenangan 3" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0025.jpg" alt="Kenangan 4" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0026.jpg" alt="Kenangan 5" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0027.jpg" alt="Kenangan 6" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0031.jpg" alt="Kenangan 7" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+            <div class="photo-holder">
+                <div class="polaroid">
+                    <img src="images/IMG-20250811-WA0032.jpg" alt="Kenangan 8" onerror="this.onerror=null;this.src='https://placehold.co/200x250/fecfef/333333?text=Error';">
+                </div>
+            </div>
+        </div>
+        <div id="doll-3" class="lotso-doll">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g><defs><radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:rgb(255,229,236);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(249,212,222);stop-opacity:1" /></radialGradient></defs><path d="M100,185 C40,185 20,120 45,70 C70,20 130,20 155,70 C180,120 160,185 100,185 Z" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M70,175 C60,140 70,120 100,120 C130,120 140,140 130,175 Z" fill="url(#grad1)" stroke="#d4acb7" stroke-width="2"/><path d="M100,85 C70,85 60,125 100,125 C140,125 130,85 100,85" fill="#FADADD" stroke="#d4acb7" stroke-width="2"/><ellipse cx="100" cy="100" rx="25" ry="18" fill="#8A4E8C" stroke="#502d51" stroke-width="1"/><circle cx="84" cy="88" r="7" fill="#2c2c2c"/><circle cx="116" cy="88" r="7" fill="#2c2c2c"/><path d="M70,75 Q85,65 100,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M100,75 Q115,65 130,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M45,70 C20,80 15,40 40,30 C65,20 60,60 45,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M155,70 C180,80 185,40 160,30 C135,20 140,60 155,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/></g></svg>
+        </div>
+    </div>
+
+    <!-- Card 4: Harapan -->
+    <div id="harapan" class="card">
+         <div class="card-content">
+            <h3>✨ Harapanku Untukmu</h3>
+            <p>
+            Semoga kamu selalu sehat, dimudahin di setiap langkah, dan dilancarkan rezekinya. Aku harap semua mimpi dan rencana yang kamu punya bisa tercapai satu per satu.
+
+            Aku mau kamu terus jadi Abuy yang aku kenal baik hati, tulus, dan selalu bikin aku nyaman. Aku mau kita bisa terus bareng-bareng, saling support, saling jaga, dan saling sayang lebih dari sebelumnya.
+
+            Aku pengen liat kamu sukses dan bahagia, dan kalau bisa… aku mau ada di setiap momen itu, nemenin kamu sampai nanti ❤️          
+            </p>
+        </div>
+        <div id="doll-4" class="lotso-doll">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g><defs><radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:rgb(255,229,236);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(249,212,222);stop-opacity:1" /></radialGradient></defs><path d="M100,185 C40,185 20,120 45,70 C70,20 130,20 155,70 C180,120 160,185 100,185 Z" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M70,175 C60,140 70,120 100,120 C130,120 140,140 130,175 Z" fill="url(#grad1)" stroke="#d4acb7" stroke-width="2"/><path d="M100,85 C70,85 60,125 100,125 C140,125 130,85 100,85" fill="#FADADD" stroke="#d4acb7" stroke-width="2"/><ellipse cx="100" cy="100" rx="25" ry="18" fill="#8A4E8C" stroke="#502d51" stroke-width="1"/><circle cx="84" cy="88" r="7" fill="#2c2c2c"/><circle cx="116" cy="88" r="7" fill="#2c2c2c"/><path d="M70,75 Q85,65 100,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M100,75 Q115,65 130,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M45,70 C20,80 15,40 40,30 C65,20 60,60 45,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M155,70 C180,80 185,40 160,30 C135,20 140,60 155,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/></g></svg>
+        </div>
+    </div>
+
+    <!-- Card 5: Penutup -->
+    <div id="penutup" class="card">
+        <div class="card-content">
+            <footer>
+                <p>Dengan segenap cinta,</p>
+                <p class="from">From Abe ❤️</p>
+            </footer>
+        </div>
+        <div id="doll-5" class="lotso-doll">
+            <div class="heart">❤️</div>
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><g><defs><radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:rgb(255,229,236);stop-opacity:1" /><stop offset="100%" style="stop-color:rgb(249,212,222);stop-opacity:1" /></radialGradient></defs><path d="M100,185 C40,185 20,120 45,70 C70,20 130,20 155,70 C180,120 160,185 100,185 Z" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M70,175 C60,140 70,120 100,120 C130,120 140,140 130,175 Z" fill="url(#grad1)" stroke="#d4acb7" stroke-width="2"/><path d="M100,85 C70,85 60,125 100,125 C140,125 130,85 100,85" fill="#FADADD" stroke="#d4acb7" stroke-width="2"/><ellipse cx="100" cy="100" rx="25" ry="18" fill="#8A4E8C" stroke="#502d51" stroke-width="1"/><circle cx="84" cy="88" r="7" fill="#2c2c2c"/><circle cx="116" cy="88" r="7" fill="#2c2c2c"/><path d="M70,75 Q85,65 100,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M100,75 Q115,65 130,75" stroke="#FFFFFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M45,70 C20,80 15,40 40,30 C65,20 60,60 45,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/><path d="M155,70 C180,80 185,40 160,30 C135,20 140,60 155,70" fill="#E56E94" stroke="#8E3A59" stroke-width="3"/></g></svg>
+        </div>
+    </div>
+
+    <script>
+        const cards = document.querySelectorAll('.card');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.4
+        });
+        cards.forEach(card => observer.observe(card));
+
+        // Observer untuk galeri
+        const gallerySection = document.getElementById('gallery-section');
+        const galleryObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    gallerySection.classList.add('gallery-section-visible');
+                }
+            });
+        }, {
+            threshold: 0.2
+        });
+        galleryObserver.observe(gallerySection);
+
+
+        const musicOverlay = document.getElementById('music-overlay');
+        const audio = document.getElementById('background-music');
+        const animationContainer = document.getElementById('background-animation');
+        const elements = ['🍓', '🌸', '💖', '✨'];
+
+        function createFallingElement() {
+            const element = document.createElement('div');
+            element.classList.add('falling-element');
+            element.style.left = Math.random() * 100 + 'vw';
+            element.style.animationDuration = Math.random() * 5 + 10 + 's';
+            element.style.opacity = Math.random();
+            element.style.fontSize = Math.random() * 1.5 + 1 + 'rem';
+            element.innerText = elements[Math.floor(Math.random() * elements.length)];
+            animationContainer.appendChild(element);
+            setTimeout(() => {
+                element.remove();
+            }, 15000);
+        }
+
+        musicOverlay.addEventListener('click', () => {
+            musicOverlay.style.opacity = '0';
+            setTimeout(() => {
+                musicOverlay.style.display = 'none';
+            }, 1000);
+            
+            document.body.style.overflow = 'auto';
+
+            audio.volume = 0.4;
+            audio.play();
+            
+            setInterval(createFallingElement, 400);
+        });
+
+        // Logika untuk Galeri
+        const modal = document.getElementById("gallery-modal");
+        const modalImg = document.getElementById("modal-image");
+        const galleryImages = document.querySelectorAll(".polaroid img");
+        let currentImageIndex;
+
+        galleryImages.forEach((img, index) => {
+            img.parentElement.onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = img.src;
+                currentImageIndex = index;
+            }
+        });
+
+        function showImage(index) {
+            if (index >= galleryImages.length) { currentImageIndex = 0; }
+            else if (index < 0) { currentImageIndex = galleryImages.length - 1; }
+            else { currentImageIndex = index; }
+            modalImg.src = galleryImages[currentImageIndex].src;
+        }
+
+        document.querySelector(".close-modal").onclick = () => modal.style.display = "none";
+        document.querySelector(".prev").onclick = () => showImage(currentImageIndex - 1);
+        document.querySelector(".next").onclick = () => showImage(currentImageIndex + 1);
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }   
+        }
+
+        // PERBAIKAN: Pastikan halaman dimulai dari paling atas saat dimuat
+        window.onload = function() {
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+            }, 10);
+        };
+    </script>
+</body>
+</html>
